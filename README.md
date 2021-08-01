@@ -10,3 +10,7 @@ Which used https://replit.com and https://uptimerobot.com to run a "free" bot in
 **Useful documentation:**<br /> 
 https://discord.js.org/ <br /> 
 https://developer.twitter.com/en/docs/twitter-api
+
+**Usage:**<br /> 
+```$meow``` to test if the bot is still alive <br /> 
+```$twitter stalk``` to manually check if any stalked accounts have followed new accounts
