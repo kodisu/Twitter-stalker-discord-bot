@@ -59,11 +59,9 @@ def stalk_all():
   for a in accounts:
     get_new_following(a)
 
-def looper(count):
+def looper():
     threading.Timer(900.0, looper).start() # call every 15 minute
     stalk_all()
-    count+=1
-    print("loop no."+ str(count))
 
 
 #RUNNING CODE#
@@ -92,6 +90,6 @@ async def on_message(message):
 
 
 keep_alive()
-count = 0
-looper(count)
+looper()
 client.run(os.environ['DISCORD_BOT_TOKEN'])
+
