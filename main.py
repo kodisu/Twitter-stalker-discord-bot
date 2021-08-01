@@ -40,8 +40,8 @@ def get_new_following(username):
     last_following = db[id]
     if current_following == last_following:
       print(username + " no new following accounts yet")
-    else:
-      discord.webhook.send(username + " is following these new accounts:")
+    elif len(current_following) > len(last_following):
+      discord.webhook.send(username + "\'s following new accounts:")
       for f in current_following:
         if f in last_following:
           break
