@@ -13,4 +13,4 @@ https://developer.twitter.com/en/docs/twitter-api
 
 **Usage:**<br /> 
 ```$meow``` to test if the bot is still alive <br /> 
-```$twitter stalk``` to manually check if any stalked accounts have followed new accounts
+```$twitter stalk all``` to manually check if any stalked accounts have followed new accounts
