@@ -1,87 +1,33 @@
+import threading
+import my_utils
+import feeder
+from stalker import stalk_all
 import os
 import requests
-import discord
 import discord
 from discord import Webhook, RequestsWebhookAdapter, File
 from replit import db
 import json
 from keep_alive import keep_alive
-import threading
-import my_utils
 
-#FUNCTIONS#
-def get_id(username):
-  url = "https://api.twitter.com/2/users/by/username/" + username
-  bearer =  os.environ['TWITTER_BEARER']
-  payload={}
-  headers = {
-    'Authorization': bearer,
-    'Cookie': 'your_cookie; personalization_id="your_id"'
-  }
-  response = requests.request("GET", url, headers=headers, data=payload)
-  parsed = json.loads(response.text)
-  return(parsed["data"]["id"])
 
-def get_new_following(username):
 
-  id = get_id(username)
-  #max amount of followers we can get is 1000, a limitiation set by Twitter API v2
-  url = url = "https://api.twitter.com/2/users/"+id+"/following"
-  bearer =  os.environ['TWITTER_BEARER']
-  payload={}
-  headers = {
-   'Authorization': bearer,
-   'Cookie': 'your_cookie; personalization_id="your_id"'
-  }
-  response = requests.request("GET", url, headers=headers, data=payload)
-  current_following = json.loads(response.text)
-  current_following = current_following["data"] 
-  
-  intro_line = False
 
-  try: 
-    #if already stored in database
-    last_following = db[id]
-    if current_following == last_following:
-      print(username + " no new following accounts yet")
-    else:
-      for f in current_following:
-        if f in last_following:
-          break
-        else:
-          if intro_line == False:
-            discord.webhook.send(username + "\'s following new accounts:")
-            intro_line = True
-          link = " https://twitter.com/" + f['username']
-          discord.webhook.send(f['username'] + link)
-      db[id] = current_following #update the follower list into the database
-  
-  #if no key exists
-  except KeyError: 
-    db[id] = current_following
-    discord.webhook.send(username + " added to stalking database")
-  except json.decoder.JSONDecodeError:
-    discord.webhook.send("during " + username + " GET call JSONDecodeError occured")
 
-def stalk_all():
-  # discord.webhook.send("initialising stalk...")
-  for a in accounts:
-    get_new_following(a)
-  # discord.webhook.send("stalk completed.")
 
 def looper():
     threading.Timer(900.0, looper).start() # call every 15 minute
     stalk_all()
 
-
-
+# def feeder():
+#   rules = feeder.get_rules()
+#   delete = feeder.delete_all_rules(rules)
+#   set = feeder.set_rules(delete)
+#   feeder.get_stream(set)
 
 #RUNNING CODE#
 webhook_url = os.environ['DISCORD_WEBHOOK']
 discord.webhook = Webhook.from_url(webhook_url, adapter=RequestsWebhookAdapter())
-
-# these are the twitter accounts whos "following" list we are stalking
-accounts = ["mcuban","elonmusk","nyannyancat"]
 
 # discord bot
 client = discord.Client()
@@ -103,3 +49,6 @@ async def on_message(message):
 keep_alive()
 looper()
 client.run(os.environ['DISCORD_BOT_TOKEN'])
+# feeder()
+
+
